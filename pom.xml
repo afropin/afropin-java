@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.afropin</groupId>
+    <artifactId>afropin-java</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+    <name>AfroPin Java</name>
+    <description>Java library for the AfroPin gift card API: sell, top up and redeem PINs, quotes, stores and webhooks</description>
+    <url>https://afropin.com/developers</url>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>AfroPin Software Limited</name>
+            <organization>AfroPin Software Limited</organization>
+            <organizationUrl>https://afropin.com</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:https://github.com/afropin/afropin-java.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/afropin/afropin-java.git</developerConnection>
+        <url>https://github.com/afropin/afropin-java</url>
+    </scm>
+
+    <properties>
+        <maven.compiler.release>11</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+    <!-- No dependencies: java.net.http, javax.crypto and a small JSON reader/writer of its own -->
+
+    <build>
+        <plugins>
+            <!-- Maven Central needs the sources and Javadoc beside the jar, all signed -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.3.1</version>
+                <executions><execution><id>attach-sources</id><goals><goal>jar-no-fork</goal></goals></execution></executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration><doclint>none</doclint></configuration>
+                <executions><execution><id>attach-javadocs</id><goals><goal>jar</goal></goals></execution></executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions><execution><id>sign-artifacts</id><phase>verify</phase><goals><goal>sign</goal></goals></execution></executions>
+            </plugin>
+            <!-- Uploads to the Central Portal (central.sonatype.com) with the "central" credentials in ~/.m2/settings.xml -->
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.6.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>central</publishingServerId>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
