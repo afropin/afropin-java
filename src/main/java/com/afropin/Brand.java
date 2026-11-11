@@ -347,6 +347,19 @@ public final class Brand {
             return setWebhook(Map.of(), null);
         }
 
+        /** Choose who delivers a PIN's codes to its customer: us (handle_delivery true) or you. (POST /api/v1/brand/pins/delivery) */
+        public Map<String, Object> setDelivery(Map<String, ?> params, String idempotencyKey) {
+            return map(client.request("POST", AfroPin.path("brand/pins/delivery"), params, idempotencyKey, false));
+        }
+
+        public Map<String, Object> setDelivery(Map<String, ?> params) {
+            return setDelivery(params, null);
+        }
+
+        public Map<String, Object> setDelivery() {
+            return setDelivery(Map.of(), null);
+        }
+
         /** Check a PIN before redeeming it; nothing changes. (POST /api/v1/brand/pins/check) */
         public Map<String, Object> check(Map<String, ?> params, String idempotencyKey) {
             return map(client.request("POST", AfroPin.path("brand/pins/check"), params, idempotencyKey, false));

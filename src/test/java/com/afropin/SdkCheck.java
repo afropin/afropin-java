@@ -26,8 +26,14 @@ public final class SdkCheck {
         check("reads JSON", ((List<Object>) ((Map<String, Object>) parsed).get("a")).get(2).equals("x\"y") && ((Map<String, Object>) ((Map<String, Object>) parsed).get("b")).get("c").equals("é"));
         check("writes JSON back", Json.read(Json.write(parsed)).equals(parsed));
         String body = "{\"type\":\"pin.sold\",\"data\":{\"pin_id\":\"p1\"}}";
-        check("verifies a webhook", Webhooks.verify(body, AfroPin.hmacHex("whsec", body), "whsec"));
-        check("refuses a forged webhook", !Webhooks.verify(body, AfroPin.hmacHex("other", body), "whsec"));
+        String now = String.valueOf(System.currentTimeMillis() / 1000);
+        String old = String.valueOf(System.currentTimeMillis() / 1000 - 301);
+        check("verifies a webhook", Webhooks.verify(body, "evt_1", now, AfroPin.hmacHex("whsec", "evt_1." + now + "." + body), "whsec"));
+        check("returns the event with its id", Webhooks.parse(body, Map.of("Webhook-Id", "evt_1", "Webhook-Timestamp", now,
+            "Webhook-Signature", AfroPin.hmacHex("whsec", "evt_1." + now + "." + body)), "whsec").get("id").equals("evt_1"));
+        check("refuses a forged webhook", !Webhooks.verify(body, "evt_1", now, AfroPin.hmacHex("other", "evt_1." + now + "." + body), "whsec"));
+        check("refuses a replayed webhook", !Webhooks.verify(body, "evt_1", old, AfroPin.hmacHex("whsec", "evt_1." + old + "." + body), "whsec"));
+        check("refuses a webhook without headers", !Webhooks.verify(body, null, null, null, "whsec"));
         check("encodes path values", AfroPin.path("reseller/pins/{pin_id}", "a/b").equals("reseller/pins/a%2Fb"));
 
         String envFile = System.getenv("AFROPIN_TEST_ENV");

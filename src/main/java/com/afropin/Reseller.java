@@ -335,6 +335,19 @@ public final class Reseller {
             return setWebhook(Map.of(), null);
         }
 
+        /** Choose who delivers a PIN's codes to its customer: us (handle_delivery true) or you. (POST /api/v1/reseller/pins/delivery) */
+        public Map<String, Object> setDelivery(Map<String, ?> params, String idempotencyKey) {
+            return map(client.request("POST", AfroPin.path("reseller/pins/delivery"), params, idempotencyKey, false));
+        }
+
+        public Map<String, Object> setDelivery(Map<String, ?> params) {
+            return setDelivery(params, null);
+        }
+
+        public Map<String, Object> setDelivery() {
+            return setDelivery(Map.of(), null);
+        }
+
         /** A PIN's cashouts. (GET /api/v1/reseller/pins/{pin_id}/cashouts) */
         public Page cashouts(String pinId, Map<String, ?> params, String idempotencyKey) {
             return (Page) client.request("GET", AfroPin.path("reseller/pins/{pin_id}/cashouts", pinId), params, idempotencyKey, true);

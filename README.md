@@ -1,12 +1,14 @@
 # AfroPin for Java
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.afropin/afropin-java)](https://central.sonatype.com/artifact/com.afropin/afropin-java)
+
 The AfroPin gift card API from Java: sell, top up and redeem PINs, quotes, stores and webhooks.
 
 ```xml
 <dependency>
     <groupId>com.afropin</groupId>
     <artifactId>afropin-java</artifactId>
-    <version>1.0.0</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -83,8 +85,15 @@ or fails with `duplicate_external_reference`.
 ## Webhooks
 
 ```java
-Map<String, Object> event = Webhooks.parse(rawBody, request.getHeader("webhook-secret"), webhookSecret);
+Map<String, Object> event = Webhooks.parse(rawBody, request.getHeader("webhook-id"),
+    request.getHeader("webhook-timestamp"), request.getHeader("webhook-signature"), webhookSecret);
 if ("pin.spent".equals(event.get("type"))) { ... }
 ```
 
-`parse` throws `invalid_signature` when the signature doesn't match. Use the raw body exactly as received.
+Each webhook carries `webhook-id`, `webhook-timestamp` and `webhook-signature` headers. `parse` throws `invalid_signature` when the
+signature doesn't match the body, a header is missing, or the timestamp is more than 5 minutes from now (check your
+server clock). Use the raw body exactly as received. The event's `id` is the same on every retry, so use it to skip
+an event you've already handled.
+
+A map of headers works too: `Webhooks.parse(rawBody, headers, webhookSecret)`, for example with Spring's
+`@RequestHeader Map<String, String>`.
