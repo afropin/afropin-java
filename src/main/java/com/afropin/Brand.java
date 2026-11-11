@@ -10,6 +10,7 @@ public final class Brand {
     private final Stores stores;
     private final Cards cards;
     private final IssuingCatalog issuingCatalog;
+    private final BrandStores brandStores;
     private final Pins pins;
     private final Catalog catalog;
     private final ResellerStores resellerStores;
@@ -21,6 +22,7 @@ public final class Brand {
         this.stores = new Stores(client);
         this.cards = new Cards(client);
         this.issuingCatalog = new IssuingCatalog(client);
+        this.brandStores = new BrandStores(client);
         this.pins = new Pins(client);
         this.catalog = new Catalog(client);
         this.resellerStores = new ResellerStores(client);
@@ -42,6 +44,10 @@ public final class Brand {
 
     public IssuingCatalog issuingCatalog() {
         return issuingCatalog;
+    }
+
+    public BrandStores brandStores() {
+        return brandStores;
     }
 
     public Pins pins() {
@@ -219,6 +225,28 @@ public final class Brand {
 
         public Map<String, Object> get(String catalogId) {
             return get(catalogId, Map.of(), null);
+        }
+    }
+
+    /** Brand brandStores */
+    public static final class BrandStores {
+        private final AfroPin client;
+
+        BrandStores(AfroPin client) {
+            this.client = client;
+        }
+
+        /** Brand stores where a PIN of one of your products can be spent: pass catalog_id. (GET /api/v1/brand/brand-stores) */
+        public Page list(Map<String, ?> params, String idempotencyKey) {
+            return (Page) client.request("GET", AfroPin.path("brand/brand-stores"), params, idempotencyKey, true);
+        }
+
+        public Page list(Map<String, ?> params) {
+            return list(params, null);
+        }
+
+        public Page list() {
+            return list(Map.of(), null);
         }
     }
 

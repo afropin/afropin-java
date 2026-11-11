@@ -30,7 +30,7 @@ import javax.crypto.spec.SecretKeySpec;
  * duplicate_external_reference, so retry yourself with a new Idempotency-Key when you need to.
  */
 public final class AfroPin {
-    public static final String VERSION = "2.0.0";
+    public static final String VERSION = "2.1.0";
     public static final String BASE_URL = "https://afropin.com/api/v1";
 
     private final String keyId;

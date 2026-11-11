@@ -370,7 +370,7 @@ public final class Reseller {
             this.client = client;
         }
 
-        /** Brand stores where your customers can spend the PINs you sell. (GET /api/v1/reseller/brand-stores) */
+        /** Brand stores where a PIN of one product can be spent: pass catalog_id. (GET /api/v1/reseller/brand-stores) */
         public Page list(Map<String, ?> params, String idempotencyKey) {
             return (Page) client.request("GET", AfroPin.path("reseller/brand-stores"), params, idempotencyKey, true);
         }
